@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-    public float speed = 6f;
+    public float speed = 10f;
     public float jumpHeight = 1000f;
     public float gravity = -9.81f;
 
@@ -15,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 velocity;
     private bool isGrounded;
-    public float jumpForce = 10f;
+
+    private float jumpForce = 16f;
 
     void Update()
     {
@@ -23,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -10f;
+            velocity.y = -3f;
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -33,12 +34,12 @@ public class PlayerMovement : MonoBehaviour
         moveDirection.y = 0;
         moveDirection.Normalize();
 
-        if (moveDirection != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
-            controller.Move(moveDirection * speed * Time.deltaTime);
-        }
+        controller.Move(moveDirection * speed * Time.deltaTime);
+
+        // Rotate player with the camera's Y rotation
+        Vector3 newRotation = transform.eulerAngles;
+        newRotation.y = playerCamera.transform.eulerAngles.y;
+        transform.rotation = Quaternion.Euler(newRotation);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -48,5 +49,13 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider.gameObject.layer == LayerMask.NameToLayer("GroundGoop"))
+        {
+            velocity.y = jumpForce;
+        }
     }
 }

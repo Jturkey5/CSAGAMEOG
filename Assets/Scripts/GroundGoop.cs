@@ -1,22 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundGoop : MonoBehaviour
 {
-    public float jumpForce = 180f;
-    public string playerTag = "Player";
+    public float jumpForce = 01f; // The force with which the object will be propelled upwards
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag(playerTag))
+        Rigidbody rb = collision.collider.GetComponent<Rigidbody>();
+
+        if (rb != null)
         {
-            Rigidbody rb = other.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                Vector3 force = new Vector3(0, jumpForce, 0);
-                rb.AddForce(force, ForceMode.VelocityChange);
-            }
+            Vector3 jumpVector = Vector3.up * jumpForce;
+            rb.AddForce(jumpVector, ForceMode.Impulse);
         }
     }
 }
