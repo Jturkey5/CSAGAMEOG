@@ -3,14 +3,16 @@ using UnityEngine;
 public class ItemPickerUpper : MonoBehaviour
 {
     public Camera playerCamera;
-    public float pickupRange = 2f;
+    public float pickupRange = 3f; // Increase the pickup range
+    public float pickupRadius = 0.5f; // Add this variable to define the radius of the sphere used for picking up items
     public LayerMask pickupMask;
     public float distanceOffset = 0.5f;
-    public int heldItemLayer; // Add this variable to store the "HeldItem" layer index
+    public int heldItemLayer;
+    public float heldItemDistance = 2f;
 
     private GameObject heldItem;
     private Collider heldItemCollider;
-    private int originalLayer; // Add this variable to store the original layer of the held item
+    private int originalLayer;
 
     void Update()
     {
@@ -28,19 +30,15 @@ public class ItemPickerUpper : MonoBehaviour
 
         if (heldItem != null)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit))
-            {
-                Vector3 newPosition = hit.point + hit.normal * distanceOffset;
-                heldItem.transform.position = newPosition;
-            }
+            Vector3 newPosition = playerCamera.transform.position + playerCamera.transform.forward * heldItemDistance;
+            heldItem.transform.position = newPosition;
         }
     }
 
     void PickupItem()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, pickupRange, pickupMask))
+        if (Physics.SphereCast(transform.position, pickupRadius, transform.forward, out hit, pickupRange, pickupMask))
         {
             heldItem = hit.collider.gameObject;
             heldItemCollider = heldItem.GetComponent<Collider>();
@@ -52,8 +50,8 @@ public class ItemPickerUpper : MonoBehaviour
                 heldItemCollider.enabled = false;
             }
 
-            originalLayer = heldItem.layer; // Store the original layer
-            heldItem.layer = heldItemLayer; // Set the held item's layer to "HeldItem"
+            originalLayer = heldItem.layer;
+            heldItem.layer = heldItemLayer;
         }
     }
 

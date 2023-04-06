@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-    public float speed = 10f;
+    public float speed = 6f;
     public float jumpHeight = 1000f;
     public float gravity = -9.81f;
 
@@ -33,12 +33,12 @@ public class PlayerMovement : MonoBehaviour
         moveDirection.y = 0;
         moveDirection.Normalize();
 
-        controller.Move(moveDirection * speed * Time.deltaTime);
-
-        // Rotate player with the camera's Y rotation
-        Vector3 newRotation = transform.eulerAngles;
-        newRotation.y = playerCamera.transform.eulerAngles.y;
-        transform.rotation = Quaternion.Euler(newRotation);
+        if (moveDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+            controller.Move(moveDirection * speed * Time.deltaTime);
+        }
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
@@ -48,16 +48,5 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
-    }
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Debug.Log("Player collided with: " + hit.gameObject.name);
-
-        GroundGoop jumpPad = hit.gameObject.GetComponent<GroundGoop>();
-        if (jumpPad != null)
-        {
-            velocity.y = jumpForce;
-        }
     }
 }

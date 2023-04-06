@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 336616752734597456}
   - component: {fileID: 1142696433696526632}
   - component: {fileID: 8349420556270357656}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: BuildingBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f3b1fc810fd4d442aa4531ff63c97420, type: 2}
+  - {fileID: 2100000, guid: defb20be778fc479784ef6f3ccb82ebf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
