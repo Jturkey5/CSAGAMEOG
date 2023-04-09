@@ -2,10 +2,17 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
-    public SlidingDoor doorToOpen;
+    public GameObject doorObject;
     public LayerMask objectMask;
 
     private bool objectOnButton = false;
+
+    private SlidingDoor doorToOpen;
+
+    void Start()
+    {
+        doorToOpen = doorObject.GetComponent<SlidingDoor>();
+    }
 
     void Update()
     {
@@ -30,5 +37,10 @@ public class Button : MonoBehaviour
             objectOnButton = false;
             doorToOpen.CloseDoor();
         }
+    }
+
+    public bool ObjectOnButton // Property to get the objectOnButton variable
+    {
+        get { return objectOnButton; }
     }
 }

@@ -12,7 +12,7 @@ public class TerrainBuilder : MonoBehaviour
 
     void Update()
     {
-        if (!canBuild && Input.GetKeyDown(buildKey)) // Check if the player can build before processing the build key
+        if (Input.GetKeyDown(buildKey)) // Check if the player can build before processing the build key
         {
             RaycastHit hit;
             if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maxBuildDistance, buildMask))
